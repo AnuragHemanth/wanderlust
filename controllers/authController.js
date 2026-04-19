@@ -1,4 +1,4 @@
-```js
+
 const passport = require("passport");
 const User = require("../models/user");
 const LocalStrategy = require("passport-local");
@@ -81,4 +81,3 @@ module.exports.debugLogin = (req, res, next) => {
 // ================= PASSPORT STRATEGY =================
 // 🔥 IMPORTANT: use default strategy (DO NOT customize)
 passport.use(new LocalStrategy(User.authenticate()));
-```
