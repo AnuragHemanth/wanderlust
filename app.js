@@ -23,7 +23,7 @@ const ExpressError = require("./utils/ExpressError");
 
 // ================= DATABASE =================
 const MONGO_URL = process.env.ATLAS_DB_URL;
-const SECRET = process.env.SECRET || "mysupersecretstring";
+const SECRET = process.env.SECRET ;
 
 mongoose.connect(MONGO_URL)
   .then(() => console.log("✅ Connected to MongoDB Atlas"))
@@ -60,7 +60,7 @@ const sessionOptions = {
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    secure: false,   // 🔥 FIX
+    secure: isProduction,   // 🔥 FIX
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
 };
