@@ -18,9 +18,7 @@ router.get("/register", authController.renderRegister);
 
 router.post("/register", authController.register);
 
-const { debugLogin } = require("../controllers/authController");
-
-router.post("/login", debugLogin, authController.login);
+router.post("/login", authController.login);
 
 router.post("/logout", authController.logout);
 

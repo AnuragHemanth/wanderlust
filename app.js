@@ -22,8 +22,8 @@ const User = require("./models/user");
 const ExpressError = require("./utils/ExpressError");
 
 // ================= DATABASE =================
-const MONGO_URL = process.env.ATLAS_DB_URL;
-const SECRET = process.env.SECRET ;
+const MONGO_URL = process.env.DATABASE_URL || process.env.ATLAS_DB_URL || 'mongodb://localhost:27017/wanderlust';
+const SECRET = process.env.SECRET || 'thisshouldbeabettersecret';
 
 mongoose.connect(MONGO_URL)
   .then(() => console.log("✅ Connected to MongoDB Atlas"))
@@ -53,6 +53,11 @@ store.on("error", (err) => {
 
 const isProduction = process.env.NODE_ENV === "production";
 
+// When running behind a proxy (Heroku, etc.) the app must trust first proxy
+if (isProduction) {
+  app.set('trust proxy', 1);
+}
+
 const sessionOptions = {
   store,
   secret: SECRET,
@@ -60,7 +65,7 @@ const sessionOptions = {
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    secure: isProduction,   // 🔥 FIX
+    secure: isProduction && process.env.SECURE_COOKIE === "true",
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
 };

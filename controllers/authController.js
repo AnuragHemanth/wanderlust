@@ -1,7 +1,6 @@
 
 const passport = require("passport");
 const User = require("../models/user");
-const LocalStrategy = require("passport-local");
 
 // ================= RENDER PAGES =================
 module.exports.renderLogin = (req, res) => {
@@ -35,7 +34,10 @@ module.exports.register = async (req, res, next) => {
       const redirectUrl = req.session.returnTo || "/listings";
       delete req.session.returnTo;
 
-      res.redirect(redirectUrl);
+      req.session.save((saveErr) => {
+        if (saveErr) return next(saveErr);
+        res.redirect(redirectUrl);
+      });
     });
 
   } catch (err) {
@@ -51,13 +53,16 @@ module.exports.login = [
     failureFlash: true,
     failureRedirect: "/login",
   }),
-  (req, res) => {
+  (req, res, next) => {
     req.flash("success", "Welcome back!");
 
     const redirectUrl = req.session.returnTo || "/listings";
     delete req.session.returnTo;
 
-    res.redirect(redirectUrl);
+    req.session.save((err) => {
+      if (err) return next(err);
+      res.redirect(redirectUrl);
+    });
   }
 ];
 
@@ -72,12 +77,10 @@ module.exports.logout = (req, res, next) => {
 };
 
 // ================= DEBUG =================
-module.exports.debugLogin = (req, res, next) => {
-  console.log("req.user:", req.user);
-  console.log("req.session:", req.session);
-  next();
-};
-
-// ================= PASSPORT STRATEGY =================
-// 🔥 IMPORTANT: use default strategy (DO NOT customize)
-passport.use(new LocalStrategy(User.authenticate()));
+// ================= DEBUG (optional) =================
+// If you need to debug, uncomment the lines below or use logging middleware
+// module.exports.debugLogin = (req, res, next) => {
+//   console.log("req.user:", req.user);
+//   console.log("req.session:", req.session);
+//   next();
+// };

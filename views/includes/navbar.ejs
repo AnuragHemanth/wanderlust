@@ -36,7 +36,7 @@
 
       <div class="d-flex align-items-center">
         <% if (currentUser) { %>
-          <span class="text-white me-3">Signed in as <%= currentUser.username %></span>
+          <span class="text-white me-3">Signed in as <%= currentUser.username || currentUser.email %></span>
           <form action="/logout" method="POST" class="m-0">
             <button class="btn btn-outline-light btn-sm" type="submit">Logout</button>
           </form>

@@ -24,6 +24,14 @@ module.exports.isLoggedIn = (req, res, next) => {
   res.redirect("/login");
 };
 
+// Save redirect URL middleware (use for protecting API routes or specific routes)
+module.exports.saveRedirectUrl = (req, res, next) => {
+  if (req.method === 'GET') {
+    req.session.returnTo = req.originalUrl;
+  }
+  next();
+};
+
 module.exports.isOwner = async (req, res, next) => {
   try {
     const { id } = req.params;
